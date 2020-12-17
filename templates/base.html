@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Knowledge Graph Visualization</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/bootstrap-theme.min.css" %}" rel="stylesheet"/>
+    <link href="{% static "css/jquery-confirm.min.css" %}" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+    <link href="{% static "css/dashboard.css" %} " rel="stylesheet">
+    <link href="{% static "css/jquery.jsonview.css" %} " rel="stylesheet">
+
+
+    <script src="{% static "js/jquery-3.4.1.min.js" %}"></script>
+    <script src="{% static "js/cytoscape.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/holder.min.js" %}"></script>
+    <script src="{% static "js/jquery.cookie.min.js" %}"></script>
+    <script src="{% static "js/jquery-confirm.min.js" %}"></script>
+    <script src="{% static "js/jquery.jsonview.js" %}"></script>
+
+
+
+{#    panzoom#}
+
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+		<link href="{% static "css/cytoscape.js-panzoom.css"%}" rel="stylesheet" type="text/css" />
+		<link href="{% static "css-panzoom/font-awesome.css"%}" rel="stylesheet" type="text/css" />
+
+		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+
+		<!-- for testing with local version of cytoscape.js -->
+		<!-- <script src="../cytoscape.js/build/cytoscape.js"></script> -->
+        <script src="{% static "js/cytoscape-panzoom.js"%}"></script>
+
+
+
+
+
+
+
+
+<style>
+.footer div{
+  height:25px;
+  width: 25%;
+  color:white;
+    text-align: center;
+    display: inline-block;
+    color:white;
+}
+
+#comment_bubble {
+    width: 90px;
+    height: 25px;
+    position: relative;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 10px;
+    font-size:80%;
+}
+
+</style>
+{#    <script>#}
+{#$(document).ready(function() {#}
+{#        function t() {#}
+{#            var e = $(".footer");//获取页脚div的对象#}
+{#            var h = e.offset().top + e.height();//获取页脚偏移量加页脚高度的值#}
+{#//判断页脚div底部到页面顶端的实际距离是否小于页面可见区域高度#}
+{##}
+{#//当页面刚好可以包容所有内容不需要下拉时直接加上个定位就是了，当然这里也可以用绝对和相对属性#}
+{#//具体设置根据你实际情况来定吧#}
+{#                $(".footer").css-panzoom({position: "fixed", left: "12%"});#}
+{#                return;#}
+{##}
+{#        }#}
+{#        t();#}
+{#    });#}
+{#    </script>#}
+
+{#<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>#}
+<script>
+$(document).ready(function(){
+function t(){
+var e = $(".footer");//获取页脚div的对象
+var h = e.offset().top + e.height() ;//获取页脚偏移量加页脚高度的值
+//判断页脚div底部到页面顶端的实际距离是否小于页面可见区域高度
+if(h < document.body.clientHeight){
+//当页面刚好可以包容所有内容不需要下拉时直接加上个定位就是了，当然这里也可以用绝对和相对属性
+//具体设置根据你实际情况来定吧
+  $(".footer").css({position:"fixed",left:"12%",bottom:"0px"});
+  return;
+}
+
+function t2(){
+  var a = $(document).scrollTop()+document.documentElement.clientHeight;//获取页面滑动偏移量加页面可见区域的高度
+//判断页脚div底部到页面顶端的实际距离是否小于页面滑动偏移量加页面可见区域高度
+if(a >= h){
+//如果页面内容太多，需要下滑展示的时候，给页脚一个固定定位属性
+$(".footer").css({position:"fixed",left:"20%",bottom:"0px"});
+}else{
+//当页面重新上滑页脚需要被隐藏的时候移除它的定位属性，这样不论何时，它肯定是被页面撑起来固定到底部展示的。
+ $(".footer").removeAttr("style");
+}
+}
+t2();
+//在页面大小改变时触发方法t2
+ $(document).resize(t2);
+ //在页面滑动时触发方法t2
+ $(document).scroll(t2);
+}
+//直接运行方法t
+t();
+
+});
+</script>
+
+</head>
+
+<body>
+<div class='footer'>
+{#    <br><br><br><br><br><br><br><br><br><br><br><br><br>#}
+    <div id="comment_bubble" style="background-color: #60418F;" ><span>Organisation</span></div>
+    <div id="comment_bubble"  style="background-color: #EE2C34;"><span>Person</span></div>
+    <div id="comment_bubble"  style="background-color: #DCAFD0;"><span>Award</span></div>
+    <div id="comment_bubble"  style="background-color: #A18055;"><span>Device</span></div>
+    <div id="comment_bubble"  style="background-color: #EF8E19;"><span>Event</span></div>
+    <div id="comment_bubble"  style="background-color: #FFD700;"><span>Food</span></div>
+    <div id="comment_bubble"  style="background-color: #5F2E20;"><span>Transportation</span></div>
+    <div id="comment_bubble"  style="background-color: #43C565;"><span>Place</span></div>
+    <div id="comment_bubble" style="background-color: #179587;"><span >Species</span></div>
+    <div id="comment_bubble"  style="background-color: #7697DE;"><span>TimePeriod</span></div>
+    <div id="comment_bubble"  style="background-color: #B362A5;"><span>Work</span></div>
+    <div id="comment_bubble"  style="background-color: #58C1DA;"><span>Thing</span></div>
+    <div id="comment_bubble" style="background-color: #E69A8D;"><span >Activity</span></div>
+
+
+
+</div>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Knowledge Graph Visualization</a>
+        </div>
+
+
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar" id="side-bar">
+                <li><a href="{% url 'home' %}">Home Page <span class="sr-only">(current)</span></a></li>
+{#                <li><a href="{% url 'search' %}">Inquire</a></li>#}
+                <li><a href="{% url 'addnode' %}">Management Page</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+{#            <h2 class="page-header">{% block page-header %}your page header{% endblock %}</h2>#}
+            {% block page-content %}
+                your page content
+            {% endblock %}
+        </div>
+    </div>
+<script>
+    //或者下面这个方法，jQuer的默认参数是：“document”；
+    $().ready(function () {
+        $('.nav-sidebar a').each(function (e) {
+            debugger
+            let href = location.href
+            $('.nav-sidebar .active').removeClass('active');
+            let url = $(this).attr("href")
+            if (href.indexOf(url) != -1) {
+                $(this).parent().addClass('active');
+            } else {
+                $(this).parent().removeClass('active');
+            }
+        })
+    })
+
+</script>
+</body>
+</html>

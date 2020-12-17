@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page-header %}
+    Management page
+{% endblock %}
+
+{% block page-content %}
+    <style>
+        .modal-content {
+        / / 宽度自适应内容 width: fit-content;
+        / / 流出间隙 padding: 0.2 rem 0.4 rem;
+        }
+    </style>
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">command</label>
+                <textarea class="form-control" id="command" placeholder="create (n:entity {entityName: 'Jeno', entityId: 123456 }) return n;"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="class=col-md-4 pull-right">
+            <button id="execute" type="button" class="btn btn-default">OK</button>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-sm" id="myModal" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <p class="text-center mb-0">
+                    <i class="fa fa-check-circle text-success mr-1" aria-hidden="true"></i>
+                    Execution succeed
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-sm" id="myModalFail" role="dialog" data-backdrop="false" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <p class="text-center mb-0">
+                    <i class="fa fa-check-circle text-success mr-1" aria-hidden="true"></i>
+                    Execution failed
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        $.ajaxSetup({
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'}
+        })
+
+        $("#execute").click(function () {
+            //获取数据
+            debugger
+            var command_input = $("#command").val()
+            var json = {'command': command_input}
+            console.log(JSON.stringify(json))
+            $.ajax({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+                },
+                url: "post/",
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (result) {
+                    if (result.status === 1) {
+                        $('#myModal').modal('show');
+                        setTimeout(function () {
+                            $("#myModal").modal("hide")
+                        }, 1200);
+                    } else {
+                        $('#myModalFail').modal('show');
+                        setTimeout(function () {
+                            $("#myModalFail").modal("hide")
+                        }, 1200);
+                    }
+                },
+                data: JSON.stringify(json)
+
+            });
+        })
+
+    </script>
+
+
+{% endblock %}
+
